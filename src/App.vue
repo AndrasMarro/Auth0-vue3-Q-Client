@@ -5,8 +5,14 @@ import { useAuth0 } from '@auth0/auth0-vue';
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 
-const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
-const login = () => loginWithRedirect();
+const { loginWithRedirect, loginWithPopup, user, isAuthenticated, logout } = useAuth0();
+
+const login = () =>
+  loginWithRedirect({
+    authorizationParams: {
+      connection: 'google-oauth2',
+    },
+  });
 const logoutm = () => logout({ logoutParams: { returnTo: window.location.origin } });
 const currentUser = user;
 const loggedIn = isAuthenticated;
@@ -25,29 +31,34 @@ const loggedIn = isAuthenticated;
           Testing auth0 login
         </q-toolbar-title>
         <q-space></q-space>
-        <q-btn-dropdown icon="person" v-if="loggedIn">
-          <div class="row no-wrap q-pa-md">
-            <q-separator vertical inset class="q-mx-lg" />
-            <div class="column items-center">
-              <q-avatar size="72px">
-                <img :src="currentUser.picture" />
-              </q-avatar>
-              <div class="q-mt-md text-center">
-                <span class="text-subtitle2">{{ currentUser.name }}</span>
-                <br />
-                <span class="text-title">{{ currentUser.email }}</span>
+        <div v-if="loggedIn">
+          <q-avatar size="xl" class="q-mr-lg">
+            <img :src="currentUser.picture" />
+          </q-avatar>
+          <q-btn-dropdown icon="person">
+            <div class="row no-wrap q-pa-md">
+              <q-separator vertical inset class="q-mx-lg" />
+              <div class="column items-center">
+                <q-avatar size="72px">
+                  <img :src="currentUser.picture" />
+                </q-avatar>
+                <div class="q-mt-md text-center">
+                  <span class="text-subtitle2">{{ currentUser.name }}</span>
+                  <br />
+                  <span class="text-title">{{ currentUser.email }}</span>
+                </div>
+                <q-btn
+                  color="primary"
+                  label="Logout"
+                  size="sm"
+                  class="q-mt-lg"
+                  @click="logoutm"
+                  v-close-popup
+                />
               </div>
-              <q-btn
-                color="primary"
-                label="Logout"
-                size="sm"
-                class="q-mt-lg"
-                @click="logoutm"
-                v-close-popup
-              />
             </div>
-          </div>
-        </q-btn-dropdown>
+          </q-btn-dropdown>
+        </div>
         <q-btn v-if="!loggedIn" label="login" clickable v-ripple @click="login"></q-btn>
       </q-toolbar>
 
