@@ -18,8 +18,8 @@ const props = defineProps({
     <!-- <div class="text-h6 text-italic text-weight-light">{{ message }}</div> -->
 
     <h6>Login data:</h6>
-    <div class="text-italic text-weight-light" style="width: 500px">
-      <code>{{ props.currentUser }}</code>
+    <div class="row">
+      <highlightjs language="json" :code="JSON.stringify(props.currentUser, null, 2)" />
     </div>
   </div>
 </template>
