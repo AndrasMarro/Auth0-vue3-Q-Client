@@ -5,17 +5,33 @@ import { useAuth0 } from '@auth0/auth0-vue';
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 
-const { loginWithRedirect, loginWithPopup, user, isAuthenticated, logout } = useAuth0();
+const {
+  loginWithRedirect,
+  loginWithPopup,
+  user,
+  isAuthenticated,
+  logout,
+  getAccessTokenSilently,
+  idTokenClaims,
+} = useAuth0();
 
 const login = () =>
   loginWithRedirect({
-    authorizationParams: {
-      connection: 'google-oauth2',
-    },
+    // authorizationParams: {
+    //   connection: 'google-oauth2',
+    // },
   });
 const logoutm = () => logout({ logoutParams: { returnTo: window.location.origin } });
+const doSomethingWithToken = async () => {
+  const token = await getAccessTokenSilently();
+  const response = await fetch('https://api.example.com/posts', {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  });
+  const data = await response.json();
+};
 const currentUser = user;
-const loggedIn = isAuthenticated;
 </script>
 
 <template>
@@ -23,7 +39,6 @@ const loggedIn = isAuthenticated;
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
         <q-toolbar-title>
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
@@ -61,7 +76,7 @@ const loggedIn = isAuthenticated;
         </div>
         <q-btn v-if="!loggedIn" label="login" clickable v-ripple @click="login"></q-btn>
       </q-toolbar>
-
+      {{ idTokenClaims }}
       <q-tabs align="left">
         <q-route-tab to="/" label="Home" />
         <q-route-tab to="/about" label="About" />

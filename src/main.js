@@ -23,6 +23,7 @@ app.use(
     clientId: 'dFpt3sWkd1tmgLpqTp8FYr4w8zsHII5Y',
     authorizationParams: {
       redirect_uri: window.location.origin,
+      audience: 'https://dev-43ovoodbznrzfsgb.eu.auth0.com/api/v2/',
     },
   }),
 );
