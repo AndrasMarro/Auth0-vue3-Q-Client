@@ -31,6 +31,7 @@ const doSomethingWithToken = async () => {
   });
   const data = await response.json();
 };
+const loggedIn = isAuthenticated;
 const currentUser = user;
 </script>
 
